@@ -1,0 +1,7 @@
+<script type="text/javascript">
+  function homeTriggerFillLRZTypes(trigger, serviceId, rowId, tabId, elementId, elementOptions) {
+    const values = [["default", "Default"], ["quantum", "Quantum"], ["supermuc", "SuperMUC"]];
+    const inputElement = getInputElement(serviceId, rowId, elementId);
+    fillSelect(elementId, inputElement, values);
+  }
+</script>
