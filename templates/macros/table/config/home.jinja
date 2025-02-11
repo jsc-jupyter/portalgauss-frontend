@@ -1,0 +1,793 @@
+{%- set frontend_config = {
+  "services": {
+    "default": "jupyterlab",
+    "options": {
+      "jupyterlab": {
+        "fillingOrder": ["option", "system", "account", "project", "partition"],
+        "navbar": {
+          "labconfig": {
+            "show": true,
+            "displayName": "Lab Config"
+          },
+          "modules": {
+            "displayName": "Kernels and Extensions",
+            "dependency": {
+              "option": [
+                "lmod"
+              ]
+            }
+          },
+          "resources": {
+            "show": false,
+            "displayName": "Resources",
+            "trigger": {
+              "partition": "homeTriggerNavbarResources"
+            },
+            "dependency": {
+              "system": [
+                "unicore"
+              ]
+            }
+          },
+          "logs": {
+            "show": true,
+            "firstRow": false,
+            "displayName": "Logs"
+          }
+        },
+        "tabs": {
+          "labconfig": {
+            "center": {
+              "name": {
+                "input": {
+                  "type": "text",
+                  "options": {
+                    "collect": true,
+                    "enabled": true,
+                    "show": true,
+                    "placeholder": "Give your lab a name"
+                  }
+                },
+                "label": {
+                  "type": "text",
+                  "width": 4,
+                  "value": "Name"
+                },
+              },
+              "option": {
+                "input": {
+                  "type": "select",
+                  "options": {
+                    "collect": true,
+                    "show": true
+                  }
+                },
+                "label": {
+                  "type": "text",
+                  "value": "Select Version"
+                },
+                "trigger": {
+                  "init": "homeTriggerOption"
+                }
+              },
+              "hr1": {
+                "input": {
+                  "type": "hr"
+                }
+              },
+              "system": {
+                "input": {
+                  "type": "select",
+                  "options": {
+                    "collect": true,
+                    "show": true
+                  }
+                },
+                "label": {
+                  "type": "text",
+                  "value": "Systems"
+                },
+                "trigger": {
+                  "init": "homeTriggerSystem",
+                  "option": "homeTriggerSystem"
+                }
+              },
+              "repotype": {
+                "input": {
+                  "type": "select",
+                  "options": {
+                    "group": "repo2docker",
+                    "enabled": true
+                  }
+                },
+                "label": {
+                  "type": "text",
+                  "value": "Repository Type"
+                },
+                "trigger": {
+                  "init": "homeTriggerRepoType"
+                },
+                "dependency": {
+                  "option": [
+                    "repo2docker"
+                  ]
+                }
+              },
+              "repourl": {
+                "input": {
+                  "type": "text",
+                  "options": {
+                    "group": "repo2docker",
+                    "enabled": "show",
+                    "placeholder": "GitHub repository name or URL",
+                    "patternDisabled": "^([a-zA-Z0-9._-]+\\/[a-zA-Z0-9._-]+(\\.git)?|https?:\\/\\/[a-zA-Z0-9._-]+(\\.[a-z]{2,})?(:\\d+)?\\/[a-zA-Z0-9._-]+\\/[a-zA-Z0-9._-]+(\\.git)?)(\\/)?$"
+                  }
+                },
+                "label": {
+                  "type": "text",
+                  "value": "Repository name or URL"
+                },
+                "dependency": {
+                  "option": [
+                    "repo2docker"
+                  ]
+                }
+              },
+              "reporef": {
+                "input": {
+                  "type": "text",
+                  "options": {
+                    "group": "repo2docker",
+                    "enabled": true,
+                    "placeholder": "HEAD",
+                    "patternDisabled": "^([a-zA-Z0-9._-]+|([a-f0-9]{7,40})|([a-zA-Z0-9._-]+\\/[a-zA-Z0-9._-]+)|([a-zA-Z0-9._-]+@~\\d+)|@~\\d+)$"
+                  }
+                },
+                "label": {
+                  "type": "text",
+                  "value": "Git ref (branch, tag, or commit)"
+                },
+                "dependency": {
+                  "option": [
+                    "repo2docker"
+                  ]
+                }
+              },
+              "repopath": {
+                "input": {
+                  "type": "text",
+                  "options": {
+                    "group": "repo2docker",
+                    "enabled": false,
+                    "placeholder": "Path to a notebook file (optional)",
+                    "patternDisabled": "^(\\/?[a-zA-Z0-9/_-]+(?:\\.[a-zA-Z0-9]+)?(?:\\/[a-zA-Z0-9/_-]+(?:\\.[a-zA-Z0-9]+)?)*|[a-zA-Z0-9/_-]+)$"
+                  }
+                },
+                "label": {
+                  "type": "textcheckbox",
+                  "value": "Open notebook or path (optional)",
+                  "options": {
+                    "default": false
+                  }
+                },
+                "dependency": {
+                  "option": [
+                    "repo2docker"
+                  ]
+                }
+              },
+              "repopathtype": {
+                "input": {
+                  "type": "select",
+                  "options": {
+                    "group": "repo2docker",
+                    "enabled": false,
+                    "show": false
+                  }
+                },
+                "label": {
+                  "type": "textcheckbox",
+                  "value": "Notebook Type",
+                  "options": {
+                    "default": false
+                  }
+                },
+                "trigger": {
+                  "init": "homeTriggerRepoPathTypeInit",
+                  "repopath": "homeTriggerRepoPathType"
+                },
+                "dependency": {
+                  "option": [
+                    "repo2docker"
+                  ]
+                }
+              },
+              "customimage": {
+                "input": {
+                  "type": "text",
+                  "options": {
+                    "group": "custom",
+                    "value": "jupyter/datascience-notebook",
+                    "placeholder": "jupyter/datascience-notebook",
+                    "patternDisabled": "^(([a-zA-Z0-9.\\-]+)(:[0-9]+)?\\/)?([a-zA-Z0-9._\\-]+\\/)*[a-zA-Z0-9._\\-]+(:[a-zA-Z0-9._\\-]+|@[A-Fa-f0-9]{64})?$"
+                  }
+                },
+                "label": {
+                  "type": "text",
+                  "value": "Image"
+                },
+                "dependency": {
+                  "option": [
+                    "custom"
+                  ]
+                }
+              },
+              "privaterepo": {
+                "input": {
+                  "type": "text",
+                  "options": {
+                    "group": "custom",
+                    "enabled": false,
+                    "placeholder": "myregistry.com:5000/myuser/myrepo",
+                    "patternDisabled": "^([a-zA-Z0-9.\\-]+(:[0-9]+)?\\/)?[a-zA-Z0-9._\\-]+\\/[a-zA-Z0-9._\\-]+$"
+                  }
+                },
+                "label": {
+                  "type": "texticoncheckbox",
+                  "value": "Private image registry",
+                  "icontext": "Use private images from your own registry",
+                  "options": {
+                    "default": false
+                  }
+                },
+                "dependency": {
+                  "option": [
+                    "custom"
+                  ]
+                }
+              },
+              "privaterepousername": {
+                "input": {
+                  "type": "text",
+                  "options": {
+                    "group": "custom",
+                    "show": false,
+                    "placeholder": "Enter your username"
+                  }
+                },
+                "label": {
+                  "type": "texticon",
+                  "value": "Username",
+                  "icontext": "Username for the private registry",
+                  "options": {
+                    "default": false
+                  }
+                },
+                "trigger": {
+                  "privaterepo": "toggleExternalCB"
+                },
+                "dependency": {
+                  "option": [
+                    "custom"
+                  ]
+                }
+              },
+              "privaterepopassword": {
+                "input": {
+                  "type": "text",
+                  "options": {
+                    "group": "custom",
+                    "secret": true,
+                    "show": false,
+                    "placeholder": "Enter your password"
+                  }
+                },
+                "label": {
+                  "type": "texticon",
+                  "value": "Password",
+                  "icontext": "Password for the private registry",
+                  "options": {
+                    "default": false
+                  }
+                },
+                "trigger": {
+                  "privaterepo": "toggleExternalCB"
+                },
+                "dependency": {
+                  "option": [
+                    "custom"
+                  ]
+                }
+              },
+              "localstoragepath": {
+                "input": {
+                  "type": "text",
+                  "options": {
+                    "group": "storage",
+                    "enabled": true,
+                    "placeholder": "/home/jovyan/work",
+                    "value": "/home/jovyan/work",
+                    "pattern": "^\\/(?:[^\\/\\0]+\\/)*[^\\/\\0]*$"
+                  }
+                },
+                "label": {
+                  "type": "textcheckbox",
+                  "value": "Mount user data",
+                  "options": {
+                    "default": false
+                  }
+                },
+                "dependency": {
+                  "option": [
+                    "custom",
+                    "repo2docker"
+                  ]
+                }
+              },
+              "account": {
+                "input": {
+                  "type": "select",
+                  "options": {
+                    "enabled": true,
+                    "group": "hpc"
+                  }
+                },
+                "label": {
+                  "type": "text",
+                  "value": "Account"
+                },
+                "trigger": {
+                  "system": "homeTriggerAccount"
+                },
+                "dependency": {
+                  "system": [
+                    "unicore"
+                  ]
+                }
+              },
+              "project": {
+                "input": {
+                  "type": "select",
+                  "options": {
+                    "enabled": true,
+                    "group": "hpc"
+                  }
+                },
+                "label": {
+                  "type": "text",
+                  "value": "Project"
+                },
+                "trigger": {
+                  "account": "homeTriggerProject"
+                },
+                "dependency": {
+                  "system": [
+                    "unicore"
+                  ]
+                }
+              },
+              "partition": {
+                "input": {
+                  "type": "select",
+                  "options": {
+                    "enabled": true,
+                    "group": "hpc"
+                  }
+                },
+                "label": {
+                  "type": "text",
+                  "value": "Partition"
+                },
+                "trigger": {
+                  "project": "homeTriggerPartition",
+                  "system": "homeTriggerPartition"
+                },
+                "dependency": {
+                  "system": [
+                    "unicore"
+                  ]
+                }
+              },
+              "reservation": {
+                "input": {
+                  "type": "select",
+                  "options": {
+                    "show": false,
+                    "group": "resources"
+                  }
+                },
+                "label": {
+                  "type": "text",
+                  "value": "Reservation"
+                },
+                "trigger": {
+                  "partition": "homeTriggerReservation",
+                  "project": "homeTriggerReservation",
+                  "system": "homeTriggerReservation"
+                },
+                "triggerOnChange": "homeTriggerReservation"
+              },
+              "reservationinfo": {
+                "input": {
+                  "type": "reservationinfo",
+                  "options": {
+                    "show": false
+                  }
+                },
+                "triggerSuffix": "input-div",
+                "trigger": {
+                  "reservation": "homeTriggerReservationInfo"
+                }
+              },
+              "lrztypes": {
+                "input": {
+                  "type": "select",
+                  "options": {
+                    "enabled": true,
+                    "group": "lrz"
+                  }
+                },
+                "label": {
+                  "type": "texticon",
+                  "value": "LRZ Types",
+                  "icontext": "Please provide some additional information Matteo. I've lost the document :("
+                },
+                "trigger": {
+                  "init": "homeTriggerFillLRZTypes"
+                },
+                "dependency": {
+                  "system": [
+                    "lrz",
+                    "lrzstaging"
+                  ]
+                }
+              },
+              "lrzcheckbox": {
+                "input": {
+                  "type": "checkbox",
+                  "options": {
+                    "enabled": true,
+                    "default": true,
+                    "group": "lrz"
+                  }
+                },
+                "label": {
+                  "type": "text",
+                  "value": "Checkbox - I don't know the details anymore"
+                },
+                "dependency": {
+                  "system": [
+                    "lrz",
+                    "lrzstaging"
+                  ]
+                }
+              },
+              "flavor": {
+                "input": {
+                  "type": "select",
+                  "options": {
+                    "enabled": true
+                  }
+                },
+                "label": {
+                  "type": "text",
+                  "value": "Flavor"
+                },
+                "trigger": {
+                  "system": "homeTriggerFlavor"
+                },
+                "dependency": {
+                  "system": [
+                    "jsccloud",
+                    "lrz",
+                    "lrzstaging",
+                    "hlrs",
+                    "hlrsstaging",
+                    "mpcdf",
+                    "tudstaging",
+                    "tud",
+                    "denbi"
+                  ]
+                }
+              },
+              "flavorlegend": {
+                "input": {
+                  "type": "flavorlegend"
+                },
+                "dependency": {
+                  "system": [
+                    "jsccloud",
+                    "lrz",
+                    "lrzstaging",
+                    "hlrs",
+                    "hlrsstaging",
+                    "mpcdf",
+                    "tudstaging",
+                    "tud",
+                    "denbi"
+                  ]
+                },            
+                "triggerSuffix": "input-div"
+              },
+              "flavorinfo": {
+                "input": {
+                  "type": "flavorinfo"
+                },
+                "triggerSuffix": "input-div",
+                "trigger": {
+                  "system": "homeTriggerFlavorInfo"
+                },
+                "dependency": {
+                  "system": [
+                    "jsccloud",
+                    "lrz",
+                    "lrzstaging",
+                    "hlrs",
+                    "hlrsstaging",
+                    "mpcdf",
+                    "tudstaging",
+                    "tud",
+                    "denbi"
+                  ]
+                }
+              }
+            },
+          },
+          "modules": {
+            "center": {
+              "extensions": {
+                "input": {
+                  "type": "multiple_checkboxes"
+                },
+                "label": {
+                  "type": "header",
+                  "value": "Extensions"
+                },
+                "options": {
+                  "group": "modules",
+                  "setName": "extensionSet"
+                },
+                "triggerSuffix": "checkboxes-div",
+                "trigger": {
+                  "option": "homeTriggerModules"
+                },
+                "dependency": {
+                  "option": [
+                    "lmod"
+                  ]
+                }
+              },
+              "kernels": {
+                "input": {
+                  "type": "multiple_checkboxes"
+                },
+                "options": {
+                  "group": "modules",
+                  "setName": "kernelSet"
+                },
+                "label": {
+                  "type": "header",
+                  "value": "Kernels"
+                },
+                "triggerSuffix": "checkboxes-div",
+                "trigger": {
+                  "option": "homeTriggerModules"
+                },
+                "dependency": {
+                  "option": [
+                    "lmod"
+                  ]
+                }
+              },
+              "proxies": {
+                "input": {
+                  "type": "multiple_checkboxes"
+                },
+                "options": {
+                  "group": "modules",
+                  "setName": "proxySet"
+                },
+                "label": {
+                  "type": "header",
+                  "value": "Proxies"
+                },
+                "triggerSuffix": "checkboxes-div",
+                "trigger": {
+                  "option": "homeTriggerModules"
+                },
+                "dependency": {
+                  "option": [
+                    "lmod"
+                  ]
+                }
+              },
+              "selecthelper": {
+                "input": {
+                  "type": "selecthelper"
+                },
+                "options": {
+                  "show": true
+                },
+                "dependency": {
+                  "option": [
+                    "lmod"
+                  ]
+                }
+              }
+            },
+          },
+          "resources": {
+            "center": {
+              "nodes": {
+                "input": {
+                  "type": "number",
+                  "options": {
+                    "show": false,
+                    "group": "resources",
+                    "collectstatic": true
+                  }
+                },
+                "label": {
+                  "type": "text",
+                  "value": "Nodes"
+                },
+                "trigger": {
+                  "system": "homeTriggerResources",
+                  "partition": "homeTriggerResources"
+                },
+                "dependency": {
+                  "system": [
+                    "unicore"
+                  ]
+                }
+              },
+              "runtime": {
+                "input": {
+                  "type": "number",
+                  "options": {
+                    "show": false,
+                    "group": "resources",
+                    "collectstatic": true
+                  }
+                },
+                "label": {
+                  "type": "text",
+                  "value": "Runtime"
+                },
+                "trigger": {
+                  "system": "homeTriggerResources",
+                  "partition": "homeTriggerResources"
+                },
+                "dependency": {
+                  "system": [
+                    "unicore"
+                  ]
+                }
+              },
+              "gpus": {
+                "input": {
+                  "type": "number",
+                  "options": {
+                    "show": false,
+                    "group": "resources",
+                    "collectstatic": true
+                  }
+                },
+                "label": {
+                  "type": "text",
+                  "value": "GPUs"
+                },
+                "trigger": {
+                  "system": "homeTriggerResources",
+                  "partition": "homeTriggerResources"
+                },
+                "dependency": {
+                  "system": [
+                    "unicore"
+                  ]
+                }
+              },
+              "xserver": {
+                "input": {
+                  "type": "number",
+                  "options": {
+                    "show": false,
+                    "group": "resources",
+                    "collectstatic": true
+                  }
+                },
+                "label": {
+                  "type": "textcheckbox",
+                  "value": "Use XServer GPU index",
+                  "options": {
+                    "default": false
+                  }
+                },
+                "trigger": {
+                  "system": "homeTriggerResources",
+                  "partition": "homeTriggerResources"
+                },
+                "dependency": {
+                  "system": [
+                    "unicore"
+                  ]
+                }
+              }
+            },
+          },
+          "logs": {
+            "center": {
+              "logcontainer": {
+                "input": {
+                  "type": "logcontainer"
+                }
+              }
+            },
+          },
+          "buttonrow": {
+            "center": {
+              "buttonrow": {
+                "input": {
+                  "type": "buttons",
+                  "options": {
+                    "buttons": [
+                      "share",
+                      "save",
+                      "reset",
+                      "delete",
+                      "startgreen"
+                    ],
+                    "share": {
+                      "text": "Share",
+                      "trigger": "homeTriggerButtonShare",
+                      "dependency": {
+                        "option": [
+                          "repo2docker",
+                          "custom"
+                        ]
+                      }
+                    },
+                    "startgreen": {
+                      "text": "Start",
+                      "trigger": "homeTriggerButtonStartGreen",
+                      "defaultRow": false,
+                      "alignRight": true
+                    },
+                    "save": {
+                      "trigger": "homeTriggerButtonSave",
+                      "firstRow": false
+                    },
+                    "reset": {
+                      "firstRow": false,
+                      "trigger": "homeTriggerButtonReset"
+                    },
+                    "delete": {
+                      "firstRow": false,
+                      "trigger": "homeTriggerButtonDelete",
+                      "alignRight": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "default": {
+          "tab": "labconfig",
+          "options": {
+            "option": "4.2",
+            "system": "JUWELS"
+          }
+        },
+        "summaryButtons": {
+          "manage": "homeSummaryButtonManage",
+          "stop": "homeSummaryButtonStop",
+          "open": "homeSummaryButtonOpen",
+          "cancel": "homeSummaryButtonCancel",
+          "del": "homeSummaryButtonDel",
+          "start": "homeSummaryButtonStart"
+        }
+      }
+    }
+  }
+}%}
