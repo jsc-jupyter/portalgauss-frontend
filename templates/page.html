@@ -1,0 +1,164 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  {% block meta -%}
+  {%- endblock -%}
+
+  <title>{% block title %}GaussCentre Portal{% endblock %}</title>
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta property="og:image" content='{{ static_url("images/mini_website.jpg", include_version=True) }}'>
+  <meta property="og:locale" content="en_US">
+  <meta property="og:site_name" content="portalgauss">
+  <meta property="og:title" content="portalgauss">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://{{hostname}}{{ base_url|default('', true) }}">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  {% block favicon -%}
+  <link rel="icon" href='{{static_url("images/favicon.svg", include_version=True)}}' type="jpg/png" />
+  {%- endblock %}
+
+  <link rel="stylesheet" href='{{static_url("components/bootstrap-5.0/dist/css/bootstrap.min.css")}}' type="text/css" />
+  <link rel="stylesheet" href='{{static_url("components/font-awesome-4.7.0/css/font-awesome.min.css")}}' type="text/css" />
+  <link rel="stylesheet" href='{{static_url("css/base.css")}}' type="text/css" />
+  <link rel="stylesheet" href='{{static_url("css/header.css")}}' type="text/css" />
+  <link rel="stylesheet" href='{{static_url("css/footer.css")}}' type="text/css" />
+  <link rel="stylesheet" href='{{static_url("components/jquery-confirm/jquery-confirm.min.css")}}' />
+  {% block stylesheet -%}
+  {%- endblock %}
+
+  <script src='{{static_url("components/jquery/dist/jquery.min.js")}}' type="text/javascript" charset="utf-8"></script>
+  <script src='{{static_url("components/bootstrap-5.0/dist/js/bootstrap.bundle.min.js")}}' type="text/javascript" charset="utf-8"></script>
+  <script src='{{static_url("components/requirejs/require.js")}}' type="text/javascript" charset="utf-8"></script>
+  <script src='{{static_url("components/jquery/dist/jquery.min.js")}}'></script>
+  <script src='{{static_url("components/jquery-confirm/jquery-confirm.min.js")}}'></script>
+  {% block scripts -%}
+  {%- endblock %}
+  <script>
+    var evtSource = undefined;
+    var testCounter = 0;
+    let globalMaintenanceSystems = [];
+
+    function sseInit() {
+      let sseUrl = `${jhdata.base_url}api/sse`
+      if ( jhdata.user ) {
+          sseUrl = `${jhdata.base_url}api/sse/${jhdata.user}?_xsrf=${window.jhdata.xsrf_token}`;
+      }
+      if ( evtSource ) {
+        evtSource.close();
+      }
+      evtSource = new EventSource(sseUrl);
+      evtSource.onmessage = (e) => {
+        try {
+            const jsonData = JSON.parse(event.data);
+            for (const [key, value] of Object.entries(jsonData)) {
+                $(`[data-sse-${key}]`).trigger("sse", value);
+            }
+        } catch (error) {
+            console.error("Failed to parse SSE data:", error);
+        }
+      };
+      evtSource.onerror = (e) => {
+        console.log("Reconnect EventSource");
+        // Reconnect
+      }
+    }
+
+    require.config({
+      {%- if version_hash -%}
+      urlArgs: "v={{version_hash}}",
+      {%- endif -%}
+      baseUrl: '{{static_url("js", include_version=True)}}',
+      paths: {
+        components: '../components',
+        jquery: '../components/jquery/dist/jquery.min',
+        bootstrap: '../components/bootstrap-5.0/dist/js/bootstrap.min',
+        moment: "../components/moment/moment",
+      },
+      shim: {
+        bootstrap: {
+          deps: ["jquery"],
+          exports: "bootstrap"
+        },
+      }
+    });
+  </script>
+  <script type="text/javascript">
+    window.jhdata = {
+      base_url: "{{ base_url }}",
+      prefix: "{{prefix}}",
+      {%- if user %}
+      user: "{{user.json_escaped_name}}",
+      {%- endif -%}
+      {%- if user and user.active %}
+      user_active: true,
+      {%- else %}
+      user_active: false,
+      {%- endif -%}
+      {%- if admin_access %}
+      admin_access: true,
+      {%- else %}
+      admin_access: false,
+      {%- endif -%}
+      {%- if not no_spawner_check and user and user.spawner.options_form %}
+      options_form: true,
+      {%- else %}
+      options_form: false,
+      {%- endif %}
+      {%- if cancel_url %}
+      cancel_url: "{{ cancel_url }}",
+      {%- endif %}
+      xsrf_token: "{{ xsrf_token }}",
+    }
+  </script>
+</head>
+
+<body>
+  <noscript>
+    <div id='noscript'>
+      JupyterHub requires JavaScript.<br>
+      Please enable it to proceed.
+    </div>
+  </noscript>
+
+  <div class="d-flex flex-column h-100">
+    {#- HEADER -#}
+    {% include "header.html" %}
+
+    {#- MAIN #}
+    <main>
+    {% block main %}
+    {% endblock %}
+    </main>
+
+    {#- FOOTER #}
+    {% include "footer.html" %}
+  </div>
+
+  {#- SCRIPTS #}
+  <script src='{{static_url("js/logout.js", include_version=True) }}' type="text/javascript" charset="utf-8"></script>
+  <script type="text/javascript">
+    // Enable tooltips everywhere
+    function enableTooltips() {
+      var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+      var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+      })
+    }
+    $( function() { enableTooltips() });
+  </script>
+  {% block script -%}
+  {%- endblock %}
+  <script>
+  $(document).ready(function() {
+    sseInit();
+  });
+  window.onbeforeunload = function() {
+    if (typeof evtSource !== 'undefined') {
+        evtSource.close();
+    }
+  }
+  </script>
+</body>
+</html>

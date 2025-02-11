@@ -1,0 +1,16 @@
+{%- import "macros/svgs.jinja" as svg -%}
+
+{%- set show_announcement = true %}
+{%- macro announcement() %}
+<div class="alert bg-info alert-dismissible fade show" style="color: #023d6b;" role="alert">
+  <h4 class="alert-heading">       
+    {{ svg.announcement_svg | safe }}
+    <span class="align-middle">Frontend Update is now live on staging!</span>
+  </h4>
+  Hey my fellow Outpost administrators. I've updated the frontend a little bit. The "user_options" you receive during the starting phase has changed. Please update your Outpost config.
+  You find an example configuration <a href="https://gitlab.jsc.fz-juelich.de/kaas/jupyter/-/blob/jupyter-stag-other/outposts/kube/values/base/config.yaml#L793">here</a>.
+  To see what the central hub sends to your Outpost in spawner.user_options, open the console in your browser (press F12) and click on Start.
+  Further questions? Feel free to contact you know who!
+  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+{%- endmacro %}
