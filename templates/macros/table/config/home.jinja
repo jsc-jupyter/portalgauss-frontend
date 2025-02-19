@@ -3,7 +3,7 @@
     "default": "jupyterlab",
     "options": {
       "jupyterlab": {
-        "fillingOrder": ["option", "system", "account", "project", "partition"],
+        "fillingOrder": ["option", "system", "account", "project", "partition", "privaterepo"],
         "navbar": {
           "labconfig": {
             "show": true,
@@ -92,21 +92,63 @@
                   "option": "homeTriggerSystem"
                 }
               },
+              "repo2dockerdirectlink": {
+                "input": {
+                  "type": "text",
+                  "options": {
+                    "collect": false,
+                    "enabled": false,
+                    "copy": true
+                  }
+                },
+                "label": {
+                  "type": "text",
+                  "width": 4,
+                  "value": "Direct Link for this configuration"
+                },
+                "onInput": {
+                  "repourl": "homeTriggerUpdateDirectLinks",
+                  "reporef": "homeTriggerUpdateDirectLinks",
+                  "repopath": "homeTriggerUpdateDirectLinks",
+                  "localstoragepath": "homeTriggerUpdateDirectLinks"
+                },
+                "trigger": {
+                  "repotype": "homeTriggerUpdateDirectLinks",
+                  "system": "homeTriggerUpdateDirectLinks",
+                  "flavor": "homeTriggerUpdateDirectLinks",
+                  "repopathtype": "homeTriggerUpdateDirectLinks",
+                  "localstoragepath": "homeTriggerUpdateDirectLinks"
+                },
+                "dependency": {
+                  "option": [
+                    "repo2docker"
+                  ]
+                }
+              },
               "repotype": {
                 "input": {
                   "type": "select",
                   "options": {
                     "group": "repo2docker",
                     "enabled": true
+                  },
+                  "values": {
+                    "gh": "GitHub",
+                    "gist": "GitHub Gist",
+                    "git": "Git repository",
+                    "gl": "GitLab",
+                    "zenodo": "Zenodo DOI",
+                    "figshare": "FigShare DOI",
+                    "hydroshare": "Hydroshare resource",
+                    "dataverse": "Dataverse DOI",
+                    "ckan": "CKAN dataset"
                   }
                 },
                 "label": {
                   "type": "text",
                   "value": "Repository Type"
                 },
-                "trigger": {
-                  "init": "homeTriggerRepoType"
-                },
+                "triggerOnChange": "homeTriggerRepoTypeChanged",
                 "dependency": {
                   "option": [
                     "repo2docker"
@@ -119,13 +161,18 @@
                   "options": {
                     "group": "repo2docker",
                     "enabled": "show",
-                    "placeholder": "GitHub repository name or URL",
-                    "patternDisabled": "^([a-zA-Z0-9._-]+\\/[a-zA-Z0-9._-]+(\\.git)?|https?:\\/\\/[a-zA-Z0-9._-]+(\\.[a-z]{2,})?(:\\d+)?\\/[a-zA-Z0-9._-]+\\/[a-zA-Z0-9._-]+(\\.git)?)(\\/)?$"
+                    "required": true,
+                    "placeholder": "example: yuvipanda/requirements or https://github.com/yuvipanda/requirements",
+                    "pattern": "^(https?:\\/\\/github\\.com\\/)?([^\\/]+\\/[^\\/]+)\\/?$"
                   }
                 },
                 "label": {
                   "type": "text",
-                  "value": "Repository name or URL"
+                  "value": "GitHub repository name or URL"
+                },
+                "onInputChange": "repoUrlChanged",
+                "trigger": {
+                  "repotype": "homeTriggerUpdateRepoUrlForType"
                 },
                 "dependency": {
                   "option": [
@@ -140,7 +187,6 @@
                     "group": "repo2docker",
                     "enabled": true,
                     "placeholder": "HEAD",
-                    "patternDisabled": "^([a-zA-Z0-9._-]+|([a-f0-9]{7,40})|([a-zA-Z0-9._-]+\\/[a-zA-Z0-9._-]+)|([a-zA-Z0-9._-]+@~\\d+)|@~\\d+)$"
                   }
                 },
                 "label": {
@@ -150,6 +196,12 @@
                 "dependency": {
                   "option": [
                     "repo2docker"
+                  ],
+                  "repotype": [
+                    "gh",
+                    "gist",
+                    "git",
+                    "gl"
                   ]
                 }
               },
@@ -159,8 +211,7 @@
                   "options": {
                     "group": "repo2docker",
                     "enabled": false,
-                    "placeholder": "Path to a notebook file (optional)",
-                    "patternDisabled": "^(\\/?[a-zA-Z0-9/_-]+(?:\\.[a-zA-Z0-9]+)?(?:\\/[a-zA-Z0-9/_-]+(?:\\.[a-zA-Z0-9]+)?)*|[a-zA-Z0-9/_-]+)$"
+                    "placeholder": "Path to a notebook file (optional)"
                   }
                 },
                 "label": {
@@ -181,19 +232,18 @@
                   "type": "select",
                   "options": {
                     "group": "repo2docker",
-                    "enabled": false,
                     "show": false
+                  },
+                  "values": {
+                    "file": "File",
+                    "url": "URL"
                   }
                 },
                 "label": {
-                  "type": "textcheckbox",
-                  "value": "Notebook Type",
-                  "options": {
-                    "default": false
-                  }
+                  "type": "text",
+                  "value": "Notebook Type"
                 },
                 "trigger": {
-                  "init": "homeTriggerRepoPathTypeInit",
                   "repopath": "homeTriggerRepoPathType"
                 },
                 "dependency": {
@@ -392,7 +442,6 @@
                 "input": {
                   "type": "select",
                   "options": {
-                    "show": false,
                     "group": "resources"
                   }
                 },
@@ -405,7 +454,12 @@
                   "project": "homeTriggerReservation",
                   "system": "homeTriggerReservation"
                 },
-                "triggerOnChange": "homeTriggerReservation"
+                "triggerOnChange": "homeTriggerReservation",
+                "dependency": {
+                  "system": [
+                    "unicore"
+                  ]
+                }
               },
               "reservationinfo": {
                 "input": {
@@ -425,6 +479,11 @@
                   "options": {
                     "enabled": true,
                     "group": "lrz"
+                  },
+                  "values": {
+                    "default": "Default",
+                    "quantum": "Quantum",
+                    "supermuc": "SuperMUC"
                   }
                 },
                 "label": {
