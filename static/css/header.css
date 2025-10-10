@@ -11,8 +11,9 @@
 
 .jpy-logo {
 	height: 80px;
-	margin-right: 40px;
 	width: auto;
+	/* margin-right: 40px; */
+
 }
 
 #logout {
