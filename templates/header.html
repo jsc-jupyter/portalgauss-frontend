@@ -1,0 +1,31 @@
+{%- block header %}
+    <nav class="navbar navbar-expand-sm bg-body-tertiary mb-4">
+        <div class="container-fluid">
+            {% block logo %}
+                <span id="jupyterhub-logo" class="navbar-brand"><a href="https://www.gauss-centre.eu/"
+                                                                   target="_blank">
+                <img src='{{ base_url }}/static/images/GCS-logo-white.jpg'
+                     alt='GCS Logo Top Left'
+                     class='jpy-logo'
+                     title='Gauss Centre for Supercomputing'/></a>
+                </span>
+            {% endblock logo %}
+
+            <div class="d-flex flex-column align-items-end ms-auto">
+                <ul class="nav navbar-nav me-2">
+                    <li class="nav-item">
+                        {% block login_widget %}
+                            <span id="login_widget">
+                            {% if user %}
+                                <span class="me-1">{{ user.name }}</span>
+                                <a id="logout" role="button" class="btn btn-sm btn-outline-contrast"
+                                   href="{{ logout_url }}"> <i aria-hidden="true" class="fa fa-sign-out"></i> Logout</a>
+                            {% endif %}
+                            </span>
+                        {% endblock login_widget %}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+{%- endblock %}
