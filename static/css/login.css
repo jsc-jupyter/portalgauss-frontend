@@ -90,8 +90,8 @@ main #login-background .container-xl {
 }
 
 .white-band-right img {
-  height: 100px;
-  max-height: 140px;
+  height: 60px;
+  max-height: 80px;
   width: auto;
   max-width: 100%;
 }
