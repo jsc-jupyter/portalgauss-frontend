@@ -1,0 +1,21 @@
+/* Top
+Footer */
+
+#footer-top {
+  background-color: #EEE;
+}
+
+/* Bottom
+Footer */
+
+#footer-bottom { /* background color comes from navbar */
+  min-height: 60px;
+  padding-left: 72px;
+  padding-right: 72px;
+}
+
+#footer-bottom * {
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+}

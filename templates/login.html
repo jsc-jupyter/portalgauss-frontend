@@ -1,0 +1,93 @@
+{%- extends "page.html" -%}
+
+{%- block stylesheet -%}
+<link rel="stylesheet" href='{{static_url("css/login.css")}}' type="text/css" />
+{%- endblock -%}
+
+{%- macro list_item(btn_id, img, alt="") -%}
+<li class="list-group-item list-group-item-action bg-light">
+  <!-- Buttons off: the sign-in options are for now just an informational list, September 2024 -->
+  <!-- <a id="{{btn_id}}" class="btn btn-outline-light" role="button"> -->
+  <!-- Img for the logos -->
+  <img class="logo rounded-3 py-1 my-2" 
+    src="{{ static_url(img, include_version=False) }}" 
+    alt="{{alt}}"/>
+  <!-- <span class="fs-5 rounded-3 fw-bold py-2 my-2">{{alt}}<span>-->
+  <!-- </a> -->
+</li>
+{%- endmacro -%}
+
+{%- block main -%}
+<div class="row g-0 h-100 justify-content-center">
+  <div id="login-background" class="col-12 flex-column d-flex justify-content-center align-items-center h-100">
+    <div class="container d-flex border shadow rounded-3 bg-light py-5">
+      <div class="row g-0 justify-content-center w-100">
+        <!-- Left column -->
+        <div id="accounts-login-div" class="d-flex col-md-7 justify-content-center align-items-center ps-5 pe-1">
+          <div class="row g-0 w-100 d-flex justify-content-center align-items-center">
+            <p class="fs-5 text-dark ps-3">
+              Sign in using one of the following accounts 
+              <!-- Logos -->
+              <ul class="list-group list-group-flush my-2">
+                {{list_item("jsc-login", "images/pages/login/Logo_FZ_Juelich_jsc.png", alt="JSC-Account")}}
+
+                {{list_item("helmholz-login", "images/pages/login/Helmholz_AAI_ID.png", alt="Helmholz AAI ID")}}
+              
+                {#- {{list_item("nfdi-login", "images/pages/login/nfdi_rgb_dark.png", alt="NFDI Login")}} #}
+              </ul>
+            </p>
+          </div>
+        </div>
+        <!-- Right column -->
+        <div id="button-login-div" class="d-flex col h-100 px-5">
+          <div class="row g-0 d-flex w-100">
+            <div class="d-flex justify-content-center align-items-center pt-5">
+              <a id="btn-login" class="btn-vbt shadow btn-lg p-4" role="button">
+                <!-- <img src='{{static_url("images/pages/login/User.svg", include_version=False) }}'/> -->
+                Sign In
+              </a>
+            </div>
+            <p class="fs-6 fw-light text-dark align-self-end text-center">No account yet? 
+              <a href="https://jupyterjsc.pages.jsc.fz-juelich.de/docs/jupyterjsc/authentication/" target="_blank">
+                Help 
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(208, 71, 10)" class="bi bi-question-circle-fill" viewBox="0 0 16 16">
+                  <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.496 6.033h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286a.237.237 0 0 0 .241.247zm2.325 6.443c.61 0 1.029-.394 1.029-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94 0 .533.425.927 1.01.927z"/>
+                </svg>
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{%- endblock -%}
+
+{% block footertop %}
+	<!-- VBT White Banner -->
+      <div id="footer-top" class="white-band">
+        <div class="white-band-content">
+          <div class="white-band-left">
+            <p>JUPYTER HUB</p>
+            <p>FOR</p>
+            <p>JSC and LRZ</p>
+          </div>
+          <div class="white-band-right">
+            <img src="{{ base_url }}static/images/GCS-logo-2.png" alt="VBT Logo">
+          </div>
+        </div>
+      </div>
+{% endblock %}
+
+{%- block script -%}
+<script src='{{static_url("js/login.js", include_version=True) }}'></script>
+
+<script>
+$("nav [id$=nav-item]").removeClass("active");
+$("#start-nav-item, #collapse-start-nav-item").addClass("active");
+
+$("#btn-login").click(function () {
+  var url = window.location.search;
+  window.location.href = "{{ base_url }}oauth_login" + url;
+});
+</script>
+{%- endblock -%}

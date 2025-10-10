@@ -1,0 +1,24 @@
+.navbar {
+    background-color: rgb(67,87,97);
+    border: none;
+	font-family: 'Arial Narrow', Arial, sans-serif;
+	color: white;
+}
+
+.logo {
+	max-height: 40px;
+}
+
+.jpy-logo {
+	height: 80px;
+	width: auto;
+}
+
+#logout {
+	color: white;
+	border: 1px solid white;
+}
+
+#logout:hover {
+    background-color: rgb(109,131,143);
+}

@@ -1,0 +1,171 @@
+.table-responsive-md p {
+  color: rgb(67,87,97);
+}
+
+.btn-success {
+  background-color: rgb(67,87,97) !important;
+  border: 1px solid rgb(67,87,97) !important;
+}
+
+.btn-danger {
+  background-color: rgb(208,71,10) !important;
+  border: 1px solid rgb(208,71,10) !important;
+}
+
+tr.summary-tr {
+  height: 73px;
+  cursor: pointer;
+}
+
+.new-spawner-tr {
+  --bs-table-bg: #fff;
+  --bs-table-striped-bg: #fff;
+  /* --bs-table-striped-color: #023d6b; */
+  --bs-table-active-bg: #fff;
+  /* --bs-table-active-color: #023d6b; */
+  --bs-table-hover-bg: #e5e6e7;
+  /* --bs-table-hover-color: #023d6b; */
+  color: #000;
+  /* text-transform: uppercase */
+}
+
+.existing-spawner-tr th {
+  background-color: #ecedee !important;
+}
+
+.existing-spawner-tr td {
+  background-color: #ecedee !important;
+}
+
+.collapsible-tr {
+  --bs-table-hover-bg: #fff !important;
+  --bs-table-striped-bg: #fff !important;
+}
+
+/*
+Collapse up and down icon
+*/
+
+.accordion-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.accordion-icon:after {
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-left: auto;
+  content: "";
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23212529'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-size: 1.25rem;
+  transition: transform .2s ease-in-out;
+}
+
+.accordion-icon:not(.collapsed)::after {
+	background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23212529'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+	transform: rotate(-180deg);
+}
+
+
+/*
+Vertical tabs
+*/
+.nav-pills button {
+  display: flex;
+  justify-content: space-between;
+  text-align: start;
+  color: rgb(153,70,28);
+  border: 1.5px solid rgb(153,70,28) !important;
+}
+
+.nav-pills button:hover {
+  color: rgb(208,71,10);
+}
+
+.nav-pills button.active {
+  background-color: rgb(153,70,28) !important;
+}
+
+.nav-pills svg {
+  margin: auto 0;
+}
+
+/* Kernels and Extensions checkboxes */
+.form-check-input:checked{
+  background-color: rgb(67,87,97) !important;
+  border: 0;
+}
+
+.form-check-input:focus, .form-check-input::after, .form-check-input:not(:disabled):not(.disabled):active:focus{
+  color: black;
+  outline: 0;
+  border: 0;
+  box-shadow: 0 0 0 0.25rem rgb(67,87,97) !important;
+}
+
+.form-check-label span {
+  color: rgb(67,87,97);
+}
+
+/* Module select all or none */
+.form-check-input.module-selector:checked{
+  background-color: rgb(153,70,28) !important;
+  border: 0;
+}
+.form-check-input.module-selector:focus, .form-check-input.module-selector::after, .form-check-input.module-selector:not(:disabled):not(.disabled):active:focus {
+  color: black;
+  outline: 0;
+  border: 0;
+  box-shadow: 0 0 0 0.25rem rgb(153,70,28) !important;
+}
+
+
+
+tr tdddd {
+  box-shadow: inset 0 0 0 0 rgb(0,0,0,0) var(--bs-table-accent-bg) !important;
+}
+
+tr thdddd {
+  box-shadow: inset 0 0 0 0 rgb(0,0,0,0) var(--bs-table-accent-bg) !important;
+}
+
+/* Module info link hover */
+.module-info-link-div {
+  position: relative;
+  overflow: hidden;
+  width: 16px;
+  height: 16px;
+}
+
+.module-info-link {
+  position: absolute;
+  left: -100px;
+  top: -0.005rem;
+  height: 16px;
+  width: 16px;
+  transition: 0.25s;
+}
+
+.module-info:hover .module-info-link {
+  left: 0;
+}
+
+.module-info:hover {
+  text-decoration: none;
+}
+
+
+/* Pre, mainly for reservation info */
+pre {
+  white-space: pre-wrap;       /* css-3 */
+  white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+  white-space: -pre-wrap;      /* Opera 4-6 */
+  white-space: -o-pre-wrap;    /* Opera 7 */
+  word-wrap: break-word;       /* Internet Explorer 5.5+ */
+}
+
+div[id$="na-info"] {
+  white-space: pre-wrap;
+}

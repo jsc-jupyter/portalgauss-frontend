@@ -6,17 +6,17 @@
   {% block meta -%}
   {%- endblock -%}
 
-  <title>{% block title %}GaussCentre Portal{% endblock %}</title>
+  <title>{% block title %}VBT Jupyterhub{% endblock %}</title>
   <meta http-equiv="X-UA-Compatible" content="chrome=1">
   <meta property="og:image" content='{{ static_url("images/mini_website.jpg", include_version=True) }}'>
   <meta property="og:locale" content="en_US">
-  <meta property="og:site_name" content="portalgauss">
-  <meta property="og:title" content="portalgauss">
+  <meta property="og:site_name" content="jupyter-jsc">
+  <meta property="og:title" content="jupyter-jsc">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://{{hostname}}{{ base_url|default('', true) }}">
+  <meta property="og:url" content="https://{{frontendCollection.get('hostname')}}{{ base_url|default('', true) }}">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   {% block favicon -%}
-  <link rel="icon" href='{{static_url("images/favicon.svg", include_version=True)}}' type="jpg/png" />
+  <link rel="icon" href='{{static_url("images/favicon.png", include_version=True)}}' type="jpg/png" />
   {%- endblock %}
 
   <link rel="stylesheet" href='{{static_url("components/bootstrap-5.0/dist/css/bootstrap.min.css")}}' type="text/css" />
@@ -51,10 +51,10 @@
       evtSource = new EventSource(sseUrl);
       evtSource.onmessage = (e) => {
         try {
-            const jsonData = JSON.parse(event.data);
-            for (const [key, value] of Object.entries(jsonData)) {
-                $(`[data-sse-${key}]`).trigger("sse", value);
-            }
+          const jsonData = JSON.parse(event.data);
+          for (const [key, value] of Object.entries(jsonData)) {
+            $(`[data-sse-${key}]`).trigger("sse", value);
+          }
         } catch (error) {
             console.error("Failed to parse SSE data:", error);
         }
@@ -123,6 +123,7 @@
   </noscript>
 
   <div class="d-flex flex-column h-100">
+
     {#- HEADER -#}
     {% include "header.html" %}
 
@@ -133,7 +134,21 @@
     </main>
 
     {#- FOOTER #}
-    {% include "footer.html" %}
+    {% block footer %}
+	<footer class="navbar mt-auto p-0">
+	    {% block footertop %}
+	    {% endblock %}
+
+          <div id="footer-bottom" class="container-fluid" data-sse-incidents>
+            <p class="py-2 px-2 text-center}">Gauss Center for SuperComputing </p>
+            <div class="py-4 px-2 text-center">
+                <a href="https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/how-to-participate/org-details/896706219/project/101137289/program/43108390/details" target="_blank">
+                    <img height="40px" src="{{ base_url }}static/images/GCS-logo-2.png" alt="GCS Logo at bottom-right">
+                </a>
+            </div>
+          </div>
+	</footer>
+    {% endblock footer %}
   </div>
 
   {#- SCRIPTS #}

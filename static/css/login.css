@@ -1,0 +1,97 @@
+/* Login div */
+
+.list-group.list-with-bullets .list-group-item {
+  list-style-type: disc;
+  display: list-item;
+}
+
+#button-login-div a,
+#button-login-div a:hover {
+  text-decoration: none;
+}
+
+#button-login-div img {
+  border-radius: 50%;
+  border: 0.25vh solid white;
+  margin: .3em;
+  height: 50px;
+}
+
+.btn-vbt {
+  background-color: rgb(208, 71, 10);
+  color: white;
+  border: none;
+}
+.btn-vbt:hover {
+  background-color: rgb(153, 50, 7);
+  color: white;
+}
+
+#login-background {
+  background-size: cover;
+  min-height: 500px;
+}
+
+#accounts-login-div {
+	max-width: 100%;
+
+}
+
+main #login-background .container {
+  max-width: 960px;
+}
+
+main #login-background .container-sm {
+  max-width: 960px;
+}
+
+main #login-background .container-md {
+  max-width: 960px;
+}
+
+main #login-background .container-lg {
+  max-width: 960px;
+}
+
+main #login-background .container-xl {
+  max-width: 960px;
+}
+
+.white-band {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.3);
+  padding: 2rem 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.white-band-content {
+  width: 100%;
+  max-width: 1200px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2rem;
+  align-items: center;
+}
+
+.white-band-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  color: white;
+  font-weight: bold;
+}
+
+.white-band-left p {
+  background: rgba(153, 70, 28);
+  padding: 3px 5px;
+  margin: 0 0 5px 0;
+}
+
+.white-band-right img {
+  height: 100px;
+  max-height: 140px;
+  width: auto;
+  max-width: 100%;
+}
