@@ -37,7 +37,7 @@
   {%- endblock %}
   <script>
     var evtSource = undefined;
-    var testCounter = 0;
+    var initSSEValues = { "initialized": false };
     let globalMaintenanceSystems = [];
 
     function sseInit() {
@@ -52,8 +52,12 @@
       evtSource.onmessage = (e) => {
         try {
           const jsonData = JSON.parse(event.data);
+          if ( !initSSEValues.initialized ) {
+            initSSEValues = { ...jsonData, initialized: true };
+          }
           for (const [key, value] of Object.entries(jsonData)) {
-            $(`[data-sse-${key}]`).trigger("sse", value);
+            let payload = Array.isArray(value) ? [value] : value;
+            $(`[data-sse-${key}]`).trigger("sse", payload);
           }
         } catch (error) {
             console.error("Failed to parse SSE data:", error);
