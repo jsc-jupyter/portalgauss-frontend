@@ -3,11 +3,25 @@
     "default": "jupyterlab",
     "options": {
       "jupyterlab": {
-        "fillingOrder": ["option", "system", "account", "project", "partition", "privaterepo"],
+        "fillingOrder": ["option", "system", "account", "project", "partition", "flavor", "privaterepo"],
         "navbar": {
           "labconfig": {
             "show": true,
             "displayName": "Lab Config"
+          },
+          "storage": {
+            "show": true,
+            "displayName": "Storage",
+            "dependency": {
+              "system": [
+                "jsccloud",
+                "denbi"
+              ]
+            }
+          },
+          "envvariables": {
+            "show": true,
+            "displayName": "Environment variables"
           },
           "modules": {
             "displayName": "Kernels and Extensions",
@@ -70,11 +84,6 @@
                   "init": "homeTriggerOption"
                 }
               },
-              "hr1": {
-                "input": {
-                  "type": "hr"
-                }
-              },
               "system": {
                 "input": {
                   "type": "select",
@@ -82,7 +91,10 @@
                     "collect": true,
                     "show": true,
                     "credits": true
-                  }
+                  },
+                  "share_system_list": ["JSC-Cloud", "deNBI-Cloud"],
+                  "rtc_system_list": ["JSC-Cloud", "deNBI-Cloud"],
+                  "rtc_option_list": ["custom", "repo2docker", "default"]
                 },
                 "label": {
                   "type": "text",
@@ -91,6 +103,12 @@
                 "trigger": {
                   "init": "homeTriggerSystem",
                   "option": "homeTriggerSystem"
+                },
+                "triggerOnChange": "homeTriggerSystemChanged"
+              },
+              "hr1": {
+                "input": {
+                  "type": "hr"
                 }
               },
               "repo2dockerdirectlink": {
@@ -188,6 +206,7 @@
                     "group": "repo2docker",
                     "enabled": true,
                     "placeholder": "HEAD",
+                    "patternDisabled": "^([a-zA-Z0-9._-]+|([a-f0-9]{7,40})|([a-zA-Z0-9._-]+\\/[a-zA-Z0-9._-]+)|([a-zA-Z0-9._-]+@~\\d+)|@~\\d+)$"
                   }
                 },
                 "label": {
@@ -409,6 +428,7 @@
                   "value": "Project"
                 },
                 "trigger": {
+                  "system": "homeTriggerProject",
                   "account": "homeTriggerProject"
                 },
                 "dependency": {
@@ -430,6 +450,7 @@
                   "value": "Partition"
                 },
                 "trigger": {
+                  "account": "homeTriggerPartition",
                   "project": "homeTriggerPartition",
                   "system": "homeTriggerPartition"
                 },
@@ -451,9 +472,13 @@
                   "value": "Reservation"
                 },
                 "trigger": {
+                  "account": "homeTriggerReservation",
                   "partition": "homeTriggerReservation",
                   "project": "homeTriggerReservation",
                   "system": "homeTriggerReservation"
+                },
+                "observeAttribute": {
+                  "collect": "homeTriggerReservationObserveCollect"
                 },
                 "triggerOnChange": "homeTriggerReservation",
                 "dependency": {
@@ -472,6 +497,11 @@
                 "triggerSuffix": "input-div",
                 "trigger": {
                   "reservation": "homeTriggerReservationInfo"
+                },
+                "dependency": {
+                  "system": [
+                    "unicore"
+                  ]
                 }
               },
               "lrztypes": {
@@ -500,8 +530,8 @@
                 "dependency": {
                   "system": [
                     "lrz",
-                    "lrzstaging",
                     "lrzganta",
+                    "lrzstaging",
                     "lrzgantastaging"
                   ],
                   "option": [
@@ -546,16 +576,11 @@
                 "dependency": {
                   "system": [
                     "jsccloud",
-                    "lrz",
-                    "lrzstaging",
-                    "lrzganta",
-                    "lrzgantastaging",
-                    "hlrs",
-                    "hlrsstaging",
                     "mpcdf",
-                    "tudstaging",
-                    "tud",
-                    "denbi"
+                    "denbi",
+                    "tudcloudstaging",
+                    "tudhpcstaging",
+                    "gwdgstaging"
                   ]
                 }
               },
@@ -566,16 +591,16 @@
                 "dependency": {
                   "system": [
                     "jsccloud",
+                    "mpcdf",
                     "lrz",
                     "lrzstaging",
                     "lrzganta",
                     "lrzgantastaging",
                     "hlrs",
                     "hlrsstaging",
-                    "mpcdf",
-                    "tudstaging",
-                    "tud",
-                    "denbi"
+                    "denbi",
+                    "tudcloudstaging",
+                    "tudhpcstaging"
                   ]
                 },            
                 "triggerSuffix": "input-div"
@@ -591,23 +616,94 @@
                 "dependency": {
                   "system": [
                     "jsccloud",
+                    "mpcdf",
                     "lrz",
                     "lrzstaging",
                     "lrzganta",
                     "lrzgantastaging",
                     "hlrs",
                     "hlrsstaging",
-                    "mpcdf",
-                    "tudstaging",
-                    "tud",
-                    "denbi"
+                    "denbi",
+                    "tudcloudstaging",
+                    "tudhpcstaging"
                   ]
                 }
               }
             },
           },
+          "storage": {
+            "center": {
+              "storagecb": {
+                "input": {
+                  "type": "storagegrow",
+                  "options": {
+                    "group": "storage",
+                    "default": false,
+                    "collect": false,
+                    "show": true
+                  }
+                },
+                "label": {
+                  "type": "text",
+                  "value": "Add external Storage mount"
+                },
+              },
+              "storage1": {
+                "input": {
+                  "type": "storageentry",
+                  "options": {
+                    "show": true,
+                    "collect": true,
+                    "group": "storage"
+                  }
+                }
+              }
+            }
+          },
+          "envvariables": {
+            "center": {
+              "envvariables": {
+                "input": {
+                  "type": "envvariablesentry",
+                  "options": {
+                    "show": true,
+                    "collect": false,
+                    "group": "envvariables"
+                  }
+                }
+              }
+            }
+          },
           "modules": {
             "center": {
+              "communities": {
+                "input": {
+                  "type": "multiple_checkboxes"
+                },
+                "options": {
+                  "group": "modules",
+                  "setName": "communitySet"
+                },
+                "label": {
+                  "type": "header",
+                  "value": "Communities"
+                },
+                "triggerSuffix": "checkboxes-div",
+                "trigger": {
+                  "option": "homeTriggerModules",
+                  "system": "homeTriggerModules"
+                },
+                "dependency": {
+                  "option": [
+                    "lmod"
+                  ]
+                }
+              },
+              "moduleshr": {
+                "input": {
+                  "type": "hr"
+                }
+              },
               "extensions": {
                 "input": {
                   "type": "multiple_checkboxes"
@@ -728,7 +824,7 @@
                 },
                 "label": {
                   "type": "text",
-                  "value": "Runtime"
+                  "value": "Runtime (minutes)"
                 },
                 "trigger": {
                   "system": "homeTriggerResources",
@@ -808,6 +904,8 @@
                   "options": {
                     "buttons": [
                       "share",
+                      "rtc",
+                      "getlink",
                       "save",
                       "reset",
                       "delete",
@@ -822,7 +920,19 @@
                           "custom",
                           "default"
                         ]
-                      }
+                      },
+                      "show": true
+                    },
+                    "rtc": {
+                      "text": "RTC",
+                      "trigger": "homeTriggerButtonRTC",
+                      "show": false
+                    },
+                    "getlink": {
+                      "text": "URL",
+                      "trigger": "homeTriggerButtonGetLink",
+                      "defaultRow": true,
+                      "firstRow": false
                     },
                     "startgreen": {
                       "text": "Start",
@@ -853,7 +963,7 @@
           "tab": "labconfig",
           "options": {
             "option": "default",
-            "system": "LRZ"            
+            "system": "LRZ"
           }
         },
         "summaryButtons": {
@@ -867,4 +977,5 @@
       }
     }
   }
+
 }%}
