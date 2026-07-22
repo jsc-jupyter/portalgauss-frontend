@@ -506,6 +506,26 @@
                   ]
                 }
               },
+              "lrz-mountdss": {
+                "input": {
+                  "type": "checkbox",
+                  "options": {
+                    "enabled": true,
+                    "default": false,
+                    "group": "lrz"
+                  }
+                },
+                "label": {
+                  "type": "text",
+                  "value": "Mount DSS?"
+                },
+                "dependency": {
+                  "system": [
+                    "lrz",
+                    "lrzstaging"
+                  ]
+                }
+              },
               "flavor": {
                 "input": {
                   "type": "select",
